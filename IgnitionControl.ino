@@ -2,6 +2,10 @@
 #include "TFT8352.h"
 #include "ads7843.h"
 
+#define Serial SerialUSB
+
+
+
 #define RPM_X_OFFSET 80
 #define RPM_Y_OFFSET 80
 #define BIAS_X_OFFSET 80
@@ -10,7 +14,6 @@
 #define SLOPE_Y_OFFSET (80 + FONTHEIGHT * 2)
 #define TEMP_X_OFFSET 80
 #define TEMP_Y_OFFSET (80 + FONTHEIGHT * 3)
-
 
 DueTimerLite dueTimer(0);
 TFT8352 tft;
@@ -30,8 +33,6 @@ void setup()
 	touch.begin();
 	update_tft();
 
-  /* add setup code here */
-
 }
 
 void loop()
@@ -43,15 +44,16 @@ void loop()
 
 void my_int_handler()
 {
-	int i;
+	int i=0;
+	if (i > 123)
+		return;
 }
-
 
 void update_tft()
 {
 	uint32_t pre_ignition_bias = 0;
 	uint32_t pre_ignition_slope = 0;
-	uint32_t temperature = 0;
+	uint32_t temperature = 123;
 
 	uint8_t flag;
 	Point p = touch.getpos(&flag);

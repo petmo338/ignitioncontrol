@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\variants\arduino_due_x;C:\Users\petermoller\Documents\Arduino\IgnitionControl;C:\Program Files (x86)\Arduino\libraries\DueTimerLite;C:\Program Files (x86)\Arduino\libraries\DueTimerLite\utility;C:\Program Files (x86)\Arduino\libraries\TFT8352;C:\Program Files (x86)\Arduino\libraries\TFT8352\utility;C:\Program Files (x86)\Arduino\libraries\touch;C:\Program Files (x86)\Arduino\libraries\touch\utility;C:\Program Files (x86)\Arduino\libraries;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\libraries;C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\default\debuggers;C:\Users\petermoller\Documents\Arduino\libraries;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system/libsam;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system/CMSIS/CMSIS/Include/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system/CMSIS/Device/ATMEL/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1/arm-none-eabi/include/c++/4.8.3/arm-none-eabi/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1/arm-none-eabi/include/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\lib\gcc\arm-none-eabi\4.8.3\include;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\Device\ATMEL\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam\include;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\CMSIS\Include\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\CMSIS\Include\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\Device\ATMEL\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam\include;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\arm-none-eabi\include;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\arm_none_eabi\include\;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\variants\arduino_due_x;C:\Users\petermoller\Documents\Arduino\ignitioncontrol;C:\Program Files (x86)\Arduino\libraries\DueTimerLite;C:\Program Files (x86)\Arduino\libraries\DueTimerLite\utility;C:\Program Files (x86)\Arduino\libraries\TFT8352;C:\Program Files (x86)\Arduino\libraries\TFT8352\utility;C:\Program Files (x86)\Arduino\libraries\touch;C:\Program Files (x86)\Arduino\libraries\touch\utility;C:\Program Files (x86)\Arduino\libraries;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\libraries;C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\default\debuggers;C:\Users\petermoller\Documents\Arduino\libraries;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system/libsam;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system/CMSIS/CMSIS/Include/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system/CMSIS/Device/ATMEL/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1/arm-none-eabi/include/c++/4.8.3/arm-none-eabi/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1/arm-none-eabi/include/;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\lib\gcc\arm-none-eabi\4.8.3\include;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\Device\ATMEL\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam\include;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\CMSIS\Include\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\CMSIS\Include\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\CMSIS\Device\ATMEL\;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam;C:\Users\petermoller\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\system\libsam\include;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\arm-none-eabi\include;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\arm_none_eabi\include\;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include;C:\Program Files (x86)\Arduino/hardware/tools/g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\Users\petermoller\Documents\Arduino\IgnitionControl\Visual Micro\.IgnitionControl.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>printf=iprintf;F_CPU=84000000L;ARDUINO=164;ARDUINO_SAM_DUE;ARDUINO_ARCH_SAM;__SAM3X8E__;USB_VID=0x2341;USB_PID=0x003e;USBCON;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -73,6 +73,47 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\DueTimerLite\DueTimerLite.h" />
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\FontDef.h" />
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\pin_magic.h" />
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\TFT8352.h" />
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\touch\ads7843.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Arduino.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\dtostrf.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\interrupt.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\pgmspace.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\binary.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Client.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\HardwareSerial.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\IPAddress.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\itoa.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Print.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Printable.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Reset.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\RingBuffer.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Server.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Stream.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\syscalls.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Tone.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\UARTClass.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Udp.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USARTClass.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBAPI.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBCore.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBDesc.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WCharacter.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WInterrupts.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_analog.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_constants.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_digital.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_private.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_pulse.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_shift.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WMath.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WString.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\variants\arduino_due_x\pins_arduino.h" />
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\variants\arduino_due_x\variant.h" />
     <ClInclude Include="include\ads7843.h" />
     <ClInclude Include="include\DueTimerLite.h" />
     <ClInclude Include="include\FontDef.h" />
@@ -81,6 +122,37 @@
     <ClInclude Include="Visual Micro\.IgnitionControl.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\DueTimerLite\DueTimerLite.cpp" />
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\glcdfont.c" />
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\TFT8352.cpp" />
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\touch\ads7843.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\abi.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\dtostrf.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\cortex_handlers.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\hooks.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\iar_calls_sam3.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\IPAddress.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\itoa.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\main.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\new.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Print.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Reset.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\RingBuffer.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Stream.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\syscalls_sam3.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\UARTClass.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USARTClass.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\CDC.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\HID.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBCore.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WInterrupts.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_analog.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_digital.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_pulse.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_shift.c" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WMath.cpp" />
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WString.cpp" />
     <ClCompile Include="src\ads7843.cpp" />
     <ClCompile Include="src\DueTimerLite.cpp" />
     <ClCompile Include="src\TFT8352.cpp" />

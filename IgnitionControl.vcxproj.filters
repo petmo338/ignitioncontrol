@@ -13,6 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="_core">
+      <UniqueIdentifier>{4ec300bc-fdf9-45e9-bfbd-e48be7d657bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_core\avr">
+      <UniqueIdentifier>{96573b84-279b-4cda-b7cc-53fe4e347ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_core\USB">
+      <UniqueIdentifier>{64a3e959-b3c8-4fb6-96ed-fae594125a66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libraries">
+      <UniqueIdentifier>{abddb61d-9b86-47b9-945d-aa2957f957df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libraries\DueTimerLite">
+      <UniqueIdentifier>{eb94d2cc-90d8-4568-a2a4-3bf448079cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libraries\TFT8352">
+      <UniqueIdentifier>{1ab5553a-c7db-47ac-8c19-d5f2895925b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libraries\touch">
+      <UniqueIdentifier>{4cfff9f8-1ee6-45f2-97cd-e5872ef12aa9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="IgnitionControl.ino" />
@@ -36,6 +57,129 @@
     <ClInclude Include="include\TFT8352.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Arduino.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\binary.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Client.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\HardwareSerial.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\IPAddress.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\itoa.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Print.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Printable.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Reset.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\RingBuffer.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Server.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Stream.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\syscalls.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Tone.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\UARTClass.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Udp.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USARTClass.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WCharacter.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WInterrupts.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_analog.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_constants.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_digital.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_private.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_pulse.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_shift.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WMath.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WString.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\dtostrf.h">
+      <Filter>_core\avr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\interrupt.h">
+      <Filter>_core\avr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\pgmspace.h">
+      <Filter>_core\avr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBAPI.h">
+      <Filter>_core\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBCore.h">
+      <Filter>_core\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBDesc.h">
+      <Filter>_core\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\variants\arduino_due_x\pins_arduino.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\variants\arduino_due_x\variant.h">
+      <Filter>_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\DueTimerLite\DueTimerLite.h">
+      <Filter>_libraries\DueTimerLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\FontDef.h">
+      <Filter>_libraries\TFT8352</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\pin_magic.h">
+      <Filter>_libraries\TFT8352</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\TFT8352.h">
+      <Filter>_libraries\TFT8352</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\touch\ads7843.h">
+      <Filter>_libraries\touch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ads7843.cpp">
@@ -46,6 +190,99 @@
     </ClCompile>
     <ClCompile Include="src\TFT8352.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\abi.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\cortex_handlers.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\hooks.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\iar_calls_sam3.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\IPAddress.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\itoa.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\main.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\new.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Print.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Reset.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\RingBuffer.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Stream.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\syscalls_sam3.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\UARTClass.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USARTClass.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WInterrupts.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_analog.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_digital.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_pulse.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\wiring_shift.c">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WMath.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\WString.cpp">
+      <Filter>_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\avr\dtostrf.c">
+      <Filter>_core\avr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\CDC.cpp">
+      <Filter>_core\USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\HID.cpp">
+      <Filter>_core\USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBCore.cpp">
+      <Filter>_core\USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\DueTimerLite\DueTimerLite.cpp">
+      <Filter>_libraries\DueTimerLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\glcdfont.c">
+      <Filter>_libraries\TFT8352</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\TFT8352.cpp">
+      <Filter>_libraries\TFT8352</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\touch\ads7843.cpp">
+      <Filter>_libraries\touch</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
