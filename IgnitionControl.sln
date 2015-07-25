@@ -7,10 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IgnitionControl", "Ignition
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Albin|Win32 = Albin|Win32
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBD52D7E-CBE9-4239-9B2D-30FD9B4C39F6}.Albin|Win32.ActiveCfg = Debug|Win32
+		{EBD52D7E-CBE9-4239-9B2D-30FD9B4C39F6}.Albin|Win32.Build.0 = Debug|Win32
 		{EBD52D7E-CBE9-4239-9B2D-30FD9B4C39F6}.Debug|Win32.ActiveCfg = Debug|Win32
 		{EBD52D7E-CBE9-4239-9B2D-30FD9B4C39F6}.Debug|Win32.Build.0 = Debug|Win32
 		{EBD52D7E-CBE9-4239-9B2D-30FD9B4C39F6}.Release|Win32.ActiveCfg = Release|Win32
