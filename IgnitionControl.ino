@@ -2,18 +2,20 @@
 #include "TFT8352.h"
 #include "ads7843.h"
 
-#define EXTRA_TRACE
+// #define EXTRA_TRACE
 
 #define Serial SerialUSB
 
 #define TFT_UPDATE_INTERVAL 250000
 #define FLYWHEEL_MAGNET_SENSOR_PIN 13
 #define IGNITION_OUT_PIN 12
-#define PRE_IGITION_SLOPE_DEFAULT 25.0 // Degrees. These two combined gives 25 deg @ 1600 rpm
-#define PRE_IGITION_SLOPE_DIVISOR 9600.0 // Angular Frequency. Slope is deg/ang_freq => time (s)
+#define PRE_IGITION_SLOPE_DEFAULT 20.0 // Degrees @ 1600 rpm. These two combined gives 25 deg + BIAS @ 1600 rpm
+#define PRE_IGITION_SLOPE_DIVISOR 9600.0 // Angular Frequency @ 1600 rpm. Slope is deg/ang_freq => time (s)
 #define PRE_IGITION_BIAS_DEFAULT 2
 #define DWELL_TIME_DEFAULT 0.0070
 #define DWELL_TIME_LONG 0.0095
+#define LONG_DWELL_TIME_RPM_THRESHOLD 600
+#define LONG_DWELL_TIME_RPM_HYSTERESIS 100
 #define RPM_SMOOTHING_LENGTH 4
 #define DELTA_TIME_HISTORY_LENGTH 4
 
@@ -30,42 +32,42 @@
 
 #define NR_OF_MAGNETS 4
 #if NR_OF_MAGNETS == 4
-int32_t true_crank_angle[NR_OF_MAGNETS] = { 0, 90, 180, 270};
+int32_t true_crank_angle[NR_OF_MAGNETS] = {90, 180, 270, 0};
 #elif NR_OF_MAGNETS == 10
-int32_t true_crank_angle[NR_OF_MAGNETS] = { 0, 36, 72, 108, 144, 180, 216, 252, 288, 324};
+int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 288, 324, 0};
 #else
 #error "NR_OF_MAGNETS not defined"
 #endif
 
 enum State {STATE_STOPPED, STATE_PHASE_FIND, STATE_STARTING, STATE_RUNNING};
-enum Stroke { STROKE_COMPRESSION, STROKE_EXHAUST};
+enum Stroke {STROKE_COMPRESSION, STROKE_EXHAUST};
 
 State current_state = STATE_STOPPED;
 State new_state = STATE_STOPPED;
 DueTimerLite dueTimer(0);
 TFT8352 tft;
 uint32_t last_tft_update;
-int32_t pre_ignition_slope = PRE_IGITION_SLOPE_DEFAULT;
-int32_t pre_ignition_bias = PRE_IGITION_BIAS_DEFAULT;
+volatile int32_t pre_ignition_slope = PRE_IGITION_SLOPE_DEFAULT;
+volatile int32_t pre_ignition_bias = PRE_IGITION_BIAS_DEFAULT;
 char serial_send_buffer[SERIAL_SEND_BUFFER_SIZE];
 volatile uint32_t revolution_time_history[RPM_SMOOTHING_LENGTH];
 volatile bool magnet_passed = true;
-volatile uint32_t estimated_crank_angle;
+volatile int32_t estimated_crank_angle;
 volatile int32_t angle_delta;
 volatile int32_t current_magnet = -1;
 volatile uint32_t rpm;
 volatile uint32_t angular_frequency;
-uint32_t delta_time_history[DELTA_TIME_HISTORY_LENGTH];
-uint32_t magnet_start_time = 0;
-uint32_t magnet_time_delta = 0;
-uint32_t revolution_time = 0;
-int32_t dwell_start_angle = 0;
-int32_t ignition_angle = 0;
-volatile uint32_t nr_of_magnets_passed = 0;
+volatile int32_t delta_time_history[DELTA_TIME_HISTORY_LENGTH];
+volatile int32_t magnet_start_time = 0;
+volatile int32_t magnet_time_delta = 0;
+volatile int32_t revolution_time = 0;
+volatile int32_t dwell_start_angle = 0;
+volatile int32_t ignition_angle = 0;
+volatile int32_t nr_of_magnets_passed = 0;
 
-uint32_t previous_magnet_time = 0;
 ADS7843 touch(26, 25, 27, 29, 30);
 
+void calculate_angles(float dwell_time);
 void set_state(State state);
 void estimate_angle_handler();
 void magnet_handler();
@@ -73,9 +75,10 @@ void update_tft();
 
 void setup()
 {
-	dueTimer.attachInterrupt(estimate_angle_handler);
-	dueTimer.setFrequency(300);
-	dueTimer.start();
+	pinMode(FLYWHEEL_MAGNET_SENSOR_PIN, INPUT);
+	pinMode(IGNITION_OUT_PIN, OUTPUT);
+	digitalWrite(IGNITION_OUT_PIN, LOW);
+
 	tft.begin();
 	tft.setRotation(0);
 	tft.fillScreen(0xffff);
@@ -83,9 +86,9 @@ void setup()
 	touch.begin();
 	update_tft();
 	last_tft_update = micros();
-
+	memset(serial_send_buffer, 0, SERIAL_SEND_BUFFER_SIZE);
 	attachInterrupt(FLYWHEEL_MAGNET_SENSOR_PIN, magnet_handler, CHANGE);
-
+	dueTimer.attachInterrupt(estimate_angle_handler);
 }
 
 void loop()
@@ -112,65 +115,70 @@ void loop()
 			}
 			else
 			{
-				uint32_t revolution_time_sum = 0;
-				for (int i = 0; i < RPM_SMOOTHING_LENGTH; i++)
-				{
-					revolution_time_sum += revolution_time_history[i];
-					rpm = (360 * RPM_SMOOTHING_LENGTH) / (revolution_time_sum / 1000000.0);
-				}
-				float angular_freq_dependent_pre_ignition = float(pre_ignition_slope) / PRE_IGITION_SLOPE_DIVISOR;
-				int32_t ang_freq = 360 / ((float)revolution_time_history[0] / 1000000.0); // Maybe use revolution_time_sum
-				dwell_start_angle = 360 - pre_ignition_bias -
-					ang_freq * (DWELL_TIME_LONG + angular_freq_dependent_pre_ignition);
-				ignition_angle = 360 - pre_ignition_bias -
-					ang_freq * angular_freq_dependent_pre_ignition;
+				calculate_angles(DWELL_TIME_LONG);
+			}
+			if (rpm > LONG_DWELL_TIME_RPM_THRESHOLD)
+			{
+				new_state = STATE_RUNNING;
 			}
 			break;
 		case STATE_RUNNING:
-			if (current_magnet != 0) // No slip in est angle around TDC.
+			if (current_magnet != 0) 
 			{
 				dueTimer.updateFrequency(angular_frequency);
 			}
 			else
 			{
-				uint32_t revolution_time_sum = 0;
-				for (int i = 0; i < RPM_SMOOTHING_LENGTH; i++)
-				{
-					revolution_time_sum += revolution_time_history[i];
-					rpm = (360 * RPM_SMOOTHING_LENGTH) / (revolution_time_sum / 1000000.0);
-				}
-				float angular_freq_dependent_pre_ignition = float(pre_ignition_slope) / PRE_IGITION_SLOPE_DIVISOR;
-				int32_t ang_freq = 360 / ((float)revolution_time_history[0] / 1000000.0);
-				dwell_start_angle = 360 - pre_ignition_bias -
-					ang_freq * (DWELL_TIME_DEFAULT + angular_freq_dependent_pre_ignition);
-				ignition_angle = 360 - pre_ignition_bias -
-					ang_freq * angular_freq_dependent_pre_ignition;
+				calculate_angles(DWELL_TIME_DEFAULT);
 			}
+			if (rpm < LONG_DWELL_TIME_RPM_THRESHOLD - LONG_DWELL_TIME_RPM_HYSTERESIS)
+			{
+				new_state = STATE_STARTING;
+				current_state = new_state; // Bypass state machine logic
+			}
+
 			// Add guard for too low dwell start / ignition angle
 			break;
 		default:
 			break;
 		}
 
-		memset(serial_send_buffer, 0, SERIAL_SEND_BUFFER_SIZE);
-		int send_size = sprintf(serial_send_buffer, "{\"ht\":%lu,\"ia\":%ld,\"ea\":%ld,\"ad\":%ld,\"cm\":%ld,\"rp\":%lu, \"st\":%d\"af\":%lu\"da\":%ld\"xx\":%d}\n",
+		noInterrupts();
+		int send_size = sprintf(serial_send_buffer, "{\"ht\":%lu,\"ia\":%ld,\"ea\":%ld,\"ad\":%ld,\"cm\":%ld,\"rp\":%lu,\"st\":%d\"af\":%lu\"da\":%ld\"nm\":%lu}\n",
 			delta_time_history[0], ignition_angle, estimated_crank_angle, angle_delta, current_magnet, rpm,
-			current_state, angular_frequency, dwell_start_angle, 0);
+			current_state, angular_frequency, dwell_start_angle, nr_of_magnets_passed);
+		interrupts();
 		Serial.write((uint8_t*)serial_send_buffer, send_size);
-		if (millis() - previous_magnet_time > 1000)
-		{
-			new_state = STATE_STOPPED;
-		}
 	}
+
 	if (micros() - last_tft_update > TFT_UPDATE_INTERVAL)
 	{
-		last_tft_update = micros();
 		update_tft();
-		if (last_tft_update - magnet_start_time > 1e6)
+		if ((int32_t)(last_tft_update - magnet_start_time) > 2e6)
 		{
+#ifdef EXTRA_TRACE
+			Serial.println("Too long since magnet start time. Engine probably stopped");
+#endif				
 			new_state = STATE_STOPPED;
 		}
+		last_tft_update = micros();
 	}
+}
+
+void calculate_angles(float dwell_time)
+{
+	uint32_t revolution_time_sum = 0;
+	for (int i = 0; i < RPM_SMOOTHING_LENGTH; i++)
+	{
+		revolution_time_sum += revolution_time_history[i];
+	}
+	rpm = (60 * RPM_SMOOTHING_LENGTH) / (revolution_time_sum / 1000000.0);
+	float angular_freq_dependent_pre_ignition = float(pre_ignition_slope) / PRE_IGITION_SLOPE_DIVISOR;
+	int32_t ang_freq = 360 / ((float)revolution_time_history[0] / 1000000.0);
+	dwell_start_angle = 360 - pre_ignition_bias -
+		ang_freq * (dwell_time + angular_freq_dependent_pre_ignition);
+	ignition_angle = 360 - pre_ignition_bias -
+		ang_freq * angular_freq_dependent_pre_ignition;
 }
 
 void estimate_angle_handler()
@@ -188,7 +196,7 @@ void estimate_angle_handler()
 		break;
 	case STATE_STARTING:
 	case STATE_RUNNING:
-		if (estimated_crank_angle < (uint32_t)ignition_angle && estimated_crank_angle >= (uint32_t)dwell_start_angle)
+		if (estimated_crank_angle < ignition_angle && estimated_crank_angle >= dwell_start_angle)
 		{
 			digitalWrite(IGNITION_OUT_PIN, HIGH);
 		}
@@ -204,12 +212,12 @@ void estimate_angle_handler()
 
 void magnet_handler()
 {
-	int now = micros();
-	int pin_state = digitalRead(FLYWHEEL_MAGNET_SENSOR_PIN);
-	magnet_time_delta = now - magnet_start_time;
-	magnet_start_time = now;
+	int32_t now = micros();
+	int32_t pin_state = digitalRead(FLYWHEEL_MAGNET_SENSOR_PIN);
 	if (pin_state == LOW)
 	{
+		magnet_time_delta = now - magnet_start_time;
+		magnet_start_time = now;
 		switch (current_state)
 		{
 		case STATE_STOPPED:
@@ -223,7 +231,7 @@ void magnet_handler()
 			}
 			if (nr_of_magnets_passed > DELTA_TIME_HISTORY_LENGTH + 2)
 			{
-				uint32_t delta_time_sum = 0;
+				int32_t delta_time_sum = 0;
 				for (int i = 0; i < DELTA_TIME_HISTORY_LENGTH; i++)
 				{
 					delta_time_sum += delta_time_history[i];
@@ -244,6 +252,7 @@ void magnet_handler()
 			if (delta_time_history[0] / 2 > magnet_time_delta)
 			{
 				current_magnet = -1; // Don't count this magnet
+				magnet_start_time -= magnet_time_delta;
 				return;
 			}
 			else
@@ -260,6 +269,7 @@ void magnet_handler()
 				angle_delta = estimated_crank_angle - true_crank_angle[current_magnet];
 				estimated_crank_angle = true_crank_angle[current_magnet];
 				angular_frequency = (360.0 / NR_OF_MAGNETS) / (magnet_time_delta / 1000000.0);
+				delta_time_history[0] = magnet_time_delta;
 			}
 			break;
 		default:
@@ -268,21 +278,28 @@ void magnet_handler()
 	}
 	if (pin_state == HIGH)
 	{
-		magnet_passed = true;
+		if (current_magnet >= 0)
+		{
+			magnet_passed = true;
+		}
 		current_magnet++;
 		current_magnet %= NR_OF_MAGNETS;
-//		current_magnet = (++current_magnet) % NR_OF_MAGNETS;
 	}
 }
 
 void set_state(State state)
 {
+#ifdef EXTRA_TRACE
+	Serial.print("Entering set_state() with state: ");
+	Serial.println(state);
+#endif
 	noInterrupts();
 	switch (state)
 	{
 	case STATE_STOPPED:
 		digitalWrite(IGNITION_OUT_PIN, LOW);
 		dueTimer.stop();
+		rpm = 0;
 		break;
 	case STATE_PHASE_FIND:
 		digitalWrite(IGNITION_OUT_PIN, LOW);
@@ -302,8 +319,7 @@ void set_state(State state)
 
 void update_tft()
 {
-	uint32_t temperature = 123;
-
+	uint32_t temperature = 123; // For now
 	uint8_t flag;
 	Point p = touch.getpos(&flag);
 	if (flag != 0)
@@ -350,18 +366,13 @@ void update_tft()
 			}
 
 		}
+	}
 
-		//Serial.print("getpos, x: ");
-		//Serial.print(p.x, DEC);
-		//Serial.print(", y: ");
-		//Serial.println(p.y, DEC);
-	}
-	uint16_t rpm = 1234 / 6;
-	if (false == true)
-	{
-		tft.setAddrWindow(RPM_X_OFFSET - FONTWIDTH, RPM_Y_OFFSET, RPM_X_OFFSET, RPM_Y_OFFSET + FONTHEIGHT);
-		tft.flood(0, FONTHEIGHT * FONTWIDTH);
-	}
+	//if (false == true)
+	//{
+	//	tft.setAddrWindow(RPM_X_OFFSET - FONTWIDTH, RPM_Y_OFFSET, RPM_X_OFFSET, RPM_Y_OFFSET + FONTHEIGHT);
+	//	tft.flood(0, FONTHEIGHT * FONTWIDTH);
+	//}
 	else
 	{
 		tft.setAddrWindow(RPM_X_OFFSET - FONTWIDTH, RPM_Y_OFFSET, RPM_X_OFFSET, RPM_Y_OFFSET + FONTHEIGHT);
@@ -381,6 +392,4 @@ void update_tft()
 	tft.drawFigure(TEMP_X_OFFSET + FONTWIDTH * 1, TEMP_Y_OFFSET, ((temperature / 100) % 10));
 	tft.drawFigure(TEMP_X_OFFSET + FONTWIDTH * 2, TEMP_Y_OFFSET, ((temperature / 10) % 10));
 	tft.drawFigure(TEMP_X_OFFSET + FONTWIDTH * 3, TEMP_Y_OFFSET, temperature % 10);
-
-
 }
