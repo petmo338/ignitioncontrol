@@ -14,25 +14,16 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="_core">
-      <UniqueIdentifier>{4ec300bc-fdf9-45e9-bfbd-e48be7d657bc}</UniqueIdentifier>
+      <UniqueIdentifier>{7355cc19-c100-428d-8e8a-8c2dc39def77}</UniqueIdentifier>
     </Filter>
     <Filter Include="_core\avr">
-      <UniqueIdentifier>{96573b84-279b-4cda-b7cc-53fe4e347ab8}</UniqueIdentifier>
+      <UniqueIdentifier>{120733f7-3993-4bca-a677-faff1e4e5d2e}</UniqueIdentifier>
     </Filter>
     <Filter Include="_core\USB">
-      <UniqueIdentifier>{64a3e959-b3c8-4fb6-96ed-fae594125a66}</UniqueIdentifier>
+      <UniqueIdentifier>{0560bde7-0427-4787-8d27-50391b93f29b}</UniqueIdentifier>
     </Filter>
     <Filter Include="_libraries">
-      <UniqueIdentifier>{abddb61d-9b86-47b9-945d-aa2957f957df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libraries\DueTimerLite">
-      <UniqueIdentifier>{eb94d2cc-90d8-4568-a2a4-3bf448079cac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libraries\TFT8352">
-      <UniqueIdentifier>{1ab5553a-c7db-47ac-8c19-d5f2895925b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libraries\touch">
-      <UniqueIdentifier>{4cfff9f8-1ee6-45f2-97cd-e5872ef12aa9}</UniqueIdentifier>
+      <UniqueIdentifier>{5709c955-92c6-4747-9f1f-26caf4b3b42a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,21 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Visual Micro\.IgnitionControl.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ads7843.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DueTimerLite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FontDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\pin_magic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TFT8352.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\Arduino.h">
@@ -165,32 +141,23 @@
     <ClInclude Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\variants\arduino_due_x\variant.h">
       <Filter>_core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\DueTimerLite\DueTimerLite.h">
-      <Filter>_libraries\DueTimerLite</Filter>
+    <ClInclude Include="DueTimerLite.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\FontDef.h">
-      <Filter>_libraries\TFT8352</Filter>
+    <ClInclude Include="FontDef.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\pin_magic.h">
-      <Filter>_libraries\TFT8352</Filter>
+    <ClInclude Include="pin_magic.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\TFT8352.h">
-      <Filter>_libraries\TFT8352</Filter>
+    <ClInclude Include="TFT8352.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\touch\ads7843.h">
-      <Filter>_libraries\touch</Filter>
+    <ClInclude Include="ads7843.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ads7843.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DueTimerLite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TFT8352.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\abi.cpp">
       <Filter>_core</Filter>
     </ClCompile>
@@ -272,17 +239,14 @@
     <ClCompile Include="..\..\..\AppData\Roaming\arduino15\packages\arduino\hardware\sam\1.6.4\cores\arduino\USB\USBCore.cpp">
       <Filter>_core\USB</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\DueTimerLite\DueTimerLite.cpp">
-      <Filter>_libraries\DueTimerLite</Filter>
+    <ClCompile Include="ads7843.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\glcdfont.c">
-      <Filter>_libraries\TFT8352</Filter>
+    <ClCompile Include="DueTimerLite.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\TFT8352\TFT8352.cpp">
-      <Filter>_libraries\TFT8352</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Program Files (x86)\Arduino\libraries\touch\ads7843.cpp">
-      <Filter>_libraries\touch</Filter>
+    <ClCompile Include="TFT8352.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

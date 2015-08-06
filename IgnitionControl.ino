@@ -20,21 +20,25 @@
 #define DELTA_TIME_HISTORY_LENGTH 4
 
 
-#define RPM_X_OFFSET 80
-#define RPM_Y_OFFSET 80
-#define BIAS_X_OFFSET 80
-#define BIAS_Y_OFFSET (80 + FONTHEIGHT) 
-#define SLOPE_X_OFFSET 80
-#define SLOPE_Y_OFFSET (80 + FONTHEIGHT * 2)
-#define TEMP_X_OFFSET 80
-#define TEMP_Y_OFFSET (80 + FONTHEIGHT * 3)
+#define BASE_X_OFFSET 80
+#define BASE_Y_OFFSET 160
+#define RPM_X_OFFSET BASE_X_OFFSET
+#define RPM_Y_OFFSET BASE_Y_OFFSET
+#define BIAS_X_OFFSET BASE_X_OFFSET
+#define BIAS_Y_OFFSET (BASE_Y_OFFSET + FONTHEIGHT) 
+#define SLOPE_X_OFFSET BASE_X_OFFSET
+#define SLOPE_Y_OFFSET (BASE_Y_OFFSET + FONTHEIGHT * 2)
+#define TEMP_X_OFFSET BASE_X_OFFSET
+#define TEMP_Y_OFFSET (BASE_Y_OFFSET + FONTHEIGHT * 3)
 #define SERIAL_SEND_BUFFER_SIZE 250
 
 #define NR_OF_MAGNETS 10
 #if NR_OF_MAGNETS == 4
 int32_t true_crank_angle[NR_OF_MAGNETS] = {90, 180, 270, 0};
+#define ENGINE_STOPPING_DELTA_TIME 100000
 #elif NR_OF_MAGNETS == 10
 int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 288, 324, 0};
+#define ENGINE_STOPPING_DELTA_TIME 50000
 #else
 #error "NR_OF_MAGNETS not defined"
 #endif
@@ -87,10 +91,6 @@ void setup()
 	update_tft();
 	last_tft_update = micros();
 	memset(serial_send_buffer, 0, SERIAL_SEND_BUFFER_SIZE);
-	for (int i = 0; i < RPM_SMOOTHING_LENGTH; i++)
-	{
-		revolution_time_history[i] = UINT32_MAX;
-	}
 	attachInterrupt(FLYWHEEL_MAGNET_SENSOR_PIN, magnet_handler, CHANGE);
 	dueTimer.attachInterrupt(estimate_angle_handler);
 }
@@ -148,7 +148,8 @@ void loop()
 		}
 
 		noInterrupts();
-		int send_size = sprintf(serial_send_buffer, "{\"ht\":%lu,\"ia\":%ld,\"ea\":%ld,\"ad\":%ld,\"cm\":%ld,\"rp\":%lu,\"st\":%d,\"af\":%lu,\"da\":%ld,\"nm\":%lu}\n",
+		int send_size = sprintf(serial_send_buffer, "{\"ht\":%lu,\"ia\":%ld,\"ea\":%ld,\"ad\":%ld,\"cm\":%ld,"
+				"\"rp\":%lu,\"st\":%d,\"af\":%lu,\"da\":%ld,\"nm\":%lu}\n",
 			delta_time_history[0], ignition_angle, estimated_crank_angle, angle_delta, current_magnet, rpm,
 			current_state, angular_frequency, dwell_start_angle, nr_of_magnets_passed);
 		interrupts();
@@ -259,6 +260,10 @@ void magnet_handler()
 				magnet_start_time -= magnet_time_delta;
 				return;
 			}
+			else if (magnet_time_delta > ENGINE_STOPPING_DELTA_TIME)
+			{
+				new_state = STATE_STOPPED;
+			}
 			else
 			{
 				if (current_magnet == 0)
@@ -311,6 +316,10 @@ void set_state(State state)
 		nr_of_magnets_passed = 0;
 		break;
 	case STATE_STARTING:
+		for (int i = 0; i < RPM_SMOOTHING_LENGTH; i++)
+		{
+			revolution_time_history[i] = UINT32_MAX;
+		}
 		dueTimer.start(angular_frequency);
 		// revolution_time = micros();
 		break;

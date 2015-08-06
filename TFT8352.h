@@ -32,8 +32,6 @@ public:
 	uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
 	void drawPic(uint8_t *data, uint32_t len);
 	void drawFigure(int16_t x, int16_t y, uint8_t c);
-	void renderChar(int16_t x, int16_t y, unsigned char c, uint16_t color, 
-		uint16_t bg, uint8_t size, uint16_t* buffer, uint16_t row_length);
 private:
 	uint8_t rotation;    
 };

@@ -1,5 +1,4 @@
 #include "TFT8352.h"
-#include "glcdfont.c"
 
 
 #define TFTWIDTH   240
@@ -310,36 +309,4 @@ void TFT8352::drawFigure(int16_t x, int16_t y, uint8_t c)
 uint16_t TFT8352::color565(uint8_t r, uint8_t g, uint8_t b)
 {
 	return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
-}
-
-// draw a character
-void TFT8352::renderChar(int16_t x, int16_t y, unsigned char c,
-uint16_t color, uint16_t bg, uint8_t size, uint16_t* buffer, uint16_t row_length) {
-
-	for (uint8_t i = 0; i < 6; i++)
-	{
-		uint8_t line;
-		if (i == 5)
-		{
-			line = 0x0;		
-		}
-		else
-		{
-			line = font[(c * 5) + i];
-		}
-		
-		for (uint8_t j = 0; j < 8; j++)
-		{
-			uint16_t paint_color = line & 1 ? color : bg;
-			for (int c_x = 0; c_x < size; ++c_x)
-			{
-				for (int c_y = 0; c_y < size; ++c_y)
-				{
-					buffer[(x + (i * size) + c_x) + ((y + (j * size) + c_y) * (row_length >> 0))] = paint_color;
-				}
-								
-			}
-			line >>= 1;
-		}
-	}
 }
