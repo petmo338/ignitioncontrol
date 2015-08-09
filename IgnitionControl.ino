@@ -7,17 +7,20 @@
 #define Serial SerialUSB
 
 #define TFT_UPDATE_INTERVAL 250000
-#define FLYWHEEL_MAGNET_SENSOR_PIN 13
-#define IGNITION_OUT_PIN 12
+#define FLYWHEEL_MAGNET_SENSOR_PIN 6
+#define IGNITION_OUT_PIN 7
+#define NTC_PIN 0
 #define PRE_IGITION_SLOPE_DEFAULT 10.0 // Degrees @ 1600 rpm. These two combined gives 25 deg + BIAS @ 1600 rpm
 #define PRE_IGITION_SLOPE_DIVISOR 9600.0 // Angular Frequency @ 1600 rpm. Slope is deg/ang_freq => time (s)
 #define PRE_IGITION_BIAS_DEFAULT 2
-#define DWELL_TIME_DEFAULT 0.0070
-#define DWELL_TIME_LONG 0.0095
-#define LONG_DWELL_TIME_RPM_THRESHOLD 600
-#define LONG_DWELL_TIME_RPM_HYSTERESIS 100
+#define DWELL_TIME_DEFAULT 0.0025 // Gives 400V over IGBT during discharge
+#define DWELL_TIME_LONG 0.0035 // Compensate for inaccuracy at low rpm
+#define LONG_DWELL_TIME_RPM_THRESHOLD 500 // DWELL_TIME_DEFAULT over this RPM
+#define LONG_DWELL_TIME_RPM_HYSTERESIS 50 // DWELL_TIME_LONG below THRESHOLD - HYSTERESIS
 #define RPM_SMOOTHING_LENGTH 4
 #define DELTA_TIME_HISTORY_LENGTH 4
+#define REFERENCE_RESISTANCE 100 // Ohm
+#define ANALOG_REF_VOLTAGE 3.3
 
 
 #define BASE_X_OFFSET 80
@@ -32,7 +35,7 @@
 #define TEMP_Y_OFFSET (BASE_Y_OFFSET + FONTHEIGHT * 3)
 #define SERIAL_SEND_BUFFER_SIZE 250
 
-#define NR_OF_MAGNETS 10
+#define NR_OF_MAGNETS 4
 #if NR_OF_MAGNETS == 4
 int32_t true_crank_angle[NR_OF_MAGNETS] = {90, 180, 270, 0};
 #define ENGINE_STOPPING_DELTA_TIME 100000
@@ -45,6 +48,13 @@ int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 288,
 
 enum State {STATE_STOPPED, STATE_PHASE_FIND, STATE_STARTING, STATE_RUNNING};
 enum Stroke {STROKE_COMPRESSION, STROKE_EXHAUST};
+
+const float ntc_table[25] = { 3226, 2515, 1976, 1565, 1248,
+							1000.0, 809.6, 657.3, 537.0, 441.7,
+							365.3, 303.3, 253.1, 212.7, 179.6,
+							152.2, 129.5, 110.7, 94.95, 81.78,
+							70.69, 61.38, 53.49, 46.73, 40.95 };
+
 
 State current_state = STATE_STOPPED;
 State new_state = STATE_STOPPED;
@@ -68,10 +78,13 @@ volatile int32_t revolution_time = 0;
 volatile int32_t dwell_start_angle = 0;
 volatile int32_t ignition_angle = 0;
 volatile int32_t nr_of_magnets_passed = 0;
+volatile uint32_t temperature_value = 0;
+uint32_t temperature = 123;
 
 ADS7843 touch(26, 25, 27, 29, 30);
 
 void calculate_angles(float dwell_time);
+void estimate_temperature(float resistance);
 void set_state(State state);
 void estimate_angle_handler();
 void magnet_handler();
@@ -81,6 +94,7 @@ void setup()
 {
 	pinMode(FLYWHEEL_MAGNET_SENSOR_PIN, INPUT);
 	pinMode(IGNITION_OUT_PIN, OUTPUT);
+	pinMode(NTC_PIN, INPUT);
 	digitalWrite(IGNITION_OUT_PIN, LOW);
 
 	tft.begin();
@@ -93,6 +107,12 @@ void setup()
 	memset(serial_send_buffer, 0, SERIAL_SEND_BUFFER_SIZE);
 	attachInterrupt(FLYWHEEL_MAGNET_SENSOR_PIN, magnet_handler, CHANGE);
 	dueTimer.attachInterrupt(estimate_angle_handler);
+
+	temperature_value = analogRead(NTC_PIN);
+
+	ADC->ADC_MR |= 0x80; // these lines set free running mode
+	ADC->ADC_CR = 2; // Start ADC
+	ADC->ADC_CHER = (1 << ADC7) | (1 << ADC15) ; // Enable ADC channel 7
 }
 
 void loop()
@@ -149,9 +169,9 @@ void loop()
 
 		noInterrupts();
 		int send_size = sprintf(serial_send_buffer, "{\"ht\":%lu,\"ia\":%ld,\"ea\":%ld,\"ad\":%ld,\"cm\":%ld,"
-				"\"rp\":%lu,\"st\":%d,\"af\":%lu,\"da\":%ld,\"nm\":%lu}\n",
+				"\"rp\":%lu,\"st\":%d,\"af\":%lu,\"da\":%ld,\"nm\":%lu,\"tp\":%lu}\n",
 			delta_time_history[0], ignition_angle, estimated_crank_angle, angle_delta, current_magnet, rpm,
-			current_state, angular_frequency, dwell_start_angle, nr_of_magnets_passed);
+			current_state, angular_frequency, dwell_start_angle, nr_of_magnets_passed, temperature);
 		interrupts();
 		Serial.write((uint8_t*)serial_send_buffer, send_size);
 	}
@@ -167,7 +187,35 @@ void loop()
 			new_state = STATE_STOPPED;
 		}
 		last_tft_update = micros();
+
+		while ((ADC->ADC_ISR & (1 << ADC7)) == 0); // wait for conversion
+		temperature_value = ADC->ADC_CDR[ADC7]; // read data from ADC channel 7
+		float voltage = (ANALOG_REF_VOLTAGE * ((float)temperature_value / (1 << ADC_RESOLUTION)));
+		float current =  voltage / REFERENCE_RESISTANCE;
+		float ntc_resistance = (ANALOG_REF_VOLTAGE - voltage) / current;
+		estimate_temperature(ntc_resistance);
 	}
+}
+
+void estimate_temperature(float resistance)
+{
+	uint32_t i = 0;
+	if (resistance >= ntc_table[0])
+	{
+		temperature = 0;
+		return;
+	}
+	else if (resistance <= ntc_table[sizeof(ntc_table) / sizeof(ntc_table[0])])
+	{
+		temperature = 120;
+		return;
+	}
+	while (resistance < ntc_table[i])
+	{
+		i++;
+	}
+	float dy = (resistance - ntc_table[i - 1]) / (ntc_table[i] - ntc_table[i - 1]);
+	temperature = (((float)i - 1.0 + dy) * 5.0);
 }
 
 void calculate_angles(float dwell_time)
@@ -178,11 +226,11 @@ void calculate_angles(float dwell_time)
 		revolution_time_sum += revolution_time_history[i];
 	}
 	rpm = (60 * RPM_SMOOTHING_LENGTH) / (revolution_time_sum / 1000000.0);
-	float angular_freq_dependent_pre_ignition = float(pre_ignition_slope) / PRE_IGITION_SLOPE_DIVISOR;
-	int32_t ang_freq = 360 / ((float)revolution_time_history[0] / 1000000.0);
-	dwell_start_angle = 360 - pre_ignition_bias -
+	float angular_freq_dependent_pre_ignition = (float)pre_ignition_slope / PRE_IGITION_SLOPE_DIVISOR;
+	float ang_freq = 360.0 / ((float)revolution_time_history[0] / 1000000.0);
+	dwell_start_angle = 360.0 - pre_ignition_bias -
 		ang_freq * (dwell_time + angular_freq_dependent_pre_ignition);
-	ignition_angle = 360 - pre_ignition_bias -
+	ignition_angle = 360.0 - pre_ignition_bias -
 		ang_freq * angular_freq_dependent_pre_ignition;
 }
 
@@ -332,12 +380,11 @@ void set_state(State state)
 
 void update_tft()
 {
-	uint32_t temperature = 123; // For now
 	uint8_t flag;
 	Point p = touch.getpos(&flag);
 	if (flag != 0)
 	{
-		p.x -= 270;
+		p.x -= 270; // Magic stuff
 		p.x /= 14.58;
 		p.y -= 230;
 		p.y /= 9;
