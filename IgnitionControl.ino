@@ -12,9 +12,9 @@
 #define NTC_PIN 0
 #define PRE_IGITION_SLOPE_DEFAULT 10.0 // Degrees @ 1600 rpm. These two combined gives 25 deg + BIAS @ 1600 rpm
 #define PRE_IGITION_SLOPE_DIVISOR 9600.0 // Angular Frequency @ 1600 rpm. Slope is deg/ang_freq => time (s)
-#define PRE_IGITION_BIAS_DEFAULT 2
-#define DWELL_TIME_DEFAULT 0.0025 // Gives 400V over IGBT during discharge
-#define DWELL_TIME_LONG 0.0035 // Compensate for inaccuracy at low rpm
+
+#define DWELL_TIME_DEFAULT 0.0022 // Gives 400V over IGBT during discharge
+#define DWELL_TIME_LONG 0.0022 // Compensate for inaccuracy at low rpm
 #define LONG_DWELL_TIME_RPM_THRESHOLD 500 // DWELL_TIME_DEFAULT over this RPM
 #define LONG_DWELL_TIME_RPM_HYSTERESIS 50 // DWELL_TIME_LONG below THRESHOLD - HYSTERESIS
 #define RPM_SMOOTHING_LENGTH 4
@@ -39,9 +39,11 @@
 #if NR_OF_MAGNETS == 4
 int32_t true_crank_angle[NR_OF_MAGNETS] = {90, 180, 270, 0};
 #define ENGINE_STOPPING_DELTA_TIME 100000
+#define PRE_IGITION_BIAS_DEFAULT 20
 #elif NR_OF_MAGNETS == 10
 int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 288, 324, 0};
 #define ENGINE_STOPPING_DELTA_TIME 50000
+#define PRE_IGITION_BIAS_DEFAULT 4
 #else
 #error "NR_OF_MAGNETS not defined"
 #endif
@@ -66,11 +68,11 @@ volatile int32_t pre_ignition_bias = PRE_IGITION_BIAS_DEFAULT;
 char serial_send_buffer[SERIAL_SEND_BUFFER_SIZE];
 volatile uint32_t revolution_time_history[RPM_SMOOTHING_LENGTH];
 volatile bool magnet_passed = true;
-volatile int32_t estimated_crank_angle;
+volatile int32_t estimated_crank_angle; // In 0.1 degrees
 volatile int32_t angle_delta;
 volatile int32_t current_magnet = -1;
 volatile uint32_t rpm;
-volatile uint32_t angular_frequency;
+volatile uint32_t angular_frequency; // In 0.1 degrees / second
 volatile int32_t delta_time_history[DELTA_TIME_HISTORY_LENGTH];
 volatile int32_t magnet_start_time = 0;
 volatile int32_t magnet_time_delta = 0;
@@ -227,20 +229,21 @@ void calculate_angles(float dwell_time)
 	}
 	rpm = (60 * RPM_SMOOTHING_LENGTH) / (revolution_time_sum / 1000000.0);
 	float angular_freq_dependent_pre_ignition = (float)pre_ignition_slope / PRE_IGITION_SLOPE_DIVISOR;
-	float ang_freq = 360.0 / ((float)revolution_time_history[0] / 1000000.0);
-	dwell_start_angle = 360.0 - pre_ignition_bias -
+	float ang_freq = 3600.0 / ((float)revolution_time_history[0] / 1000000.0);
+//	float ang_freq = rpm * 6;
+	dwell_start_angle = 3600.0 - (pre_ignition_bias * 10) -
 		ang_freq * (dwell_time + angular_freq_dependent_pre_ignition);
-	ignition_angle = 360.0 - pre_ignition_bias -
+	ignition_angle = 3600.0 - (pre_ignition_bias * 10) -
 		ang_freq * angular_freq_dependent_pre_ignition;
 }
 
 void estimate_angle_handler()
 {
 	estimated_crank_angle++;
-	if (estimated_crank_angle >= 360)
-	{
-		estimated_crank_angle -= 360;
-	}
+	//if (estimated_crank_angle >= 3600)
+	//{
+	//	estimated_crank_angle -= 3600;
+	//}
 	switch (current_state)
 	{
 	case STATE_STOPPED:
@@ -292,7 +295,7 @@ void magnet_handler()
 				if (delta_time_sum / 8 > magnet_time_delta)
 				{
 					new_state = STATE_STARTING;
-					angular_frequency = (360.0 / NR_OF_MAGNETS) /
+					angular_frequency = (3600.0 / NR_OF_MAGNETS) /
 						(delta_time_history[(nr_of_magnets_passed - 1) % DELTA_TIME_HISTORY_LENGTH] / 1000000.0);
 					estimated_crank_angle = (magnet_time_delta / 1000000.0) * angular_frequency;
 					current_magnet = -1; // Don't count this magnet
@@ -323,9 +326,9 @@ void magnet_handler()
 					revolution_time_history[0] = now - revolution_time;
 					revolution_time = now;
 				}
-				angle_delta = estimated_crank_angle - true_crank_angle[current_magnet];
-				estimated_crank_angle = true_crank_angle[current_magnet];
-				angular_frequency = (360.0 / NR_OF_MAGNETS) / (magnet_time_delta / 1000000.0);
+				angle_delta = estimated_crank_angle - (true_crank_angle[current_magnet] * 10);
+				estimated_crank_angle = true_crank_angle[current_magnet] * 10;
+				angular_frequency = (3600.0 / NR_OF_MAGNETS) / (magnet_time_delta / 1000000.0);
 				delta_time_history[0] = magnet_time_delta;
 			}
 			break;
