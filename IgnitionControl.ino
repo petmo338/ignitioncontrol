@@ -12,7 +12,6 @@
 #define NTC_PIN 0
 #define PRE_IGITION_SLOPE_DEFAULT 10.0 // Degrees @ 1600 rpm. These two combined gives 25 deg + BIAS @ 1600 rpm
 #define PRE_IGITION_SLOPE_DIVISOR 9600.0 // Angular Frequency @ 1600 rpm. Slope is deg/ang_freq => time (s)
-
 #define DWELL_TIME_DEFAULT 0.0022 // Gives 400V over IGBT during discharge
 #define DWELL_TIME_LONG 0.0022 // Compensate for inaccuracy at low rpm
 #define LONG_DWELL_TIME_RPM_THRESHOLD 500 // DWELL_TIME_DEFAULT over this RPM
@@ -35,13 +34,13 @@
 #define TEMP_Y_OFFSET (BASE_Y_OFFSET + FONTHEIGHT * 3)
 #define SERIAL_SEND_BUFFER_SIZE 250
 
-#define NR_OF_MAGNETS 4
+#define NR_OF_MAGNETS 10
 #if NR_OF_MAGNETS == 4
-int32_t true_crank_angle[NR_OF_MAGNETS] = {90, 180, 270, 0};
+int32_t true_crank_angle[NR_OF_MAGNETS] = {90, 180, 270, 360};
 #define ENGINE_STOPPING_DELTA_TIME 100000
-#define PRE_IGITION_BIAS_DEFAULT 20
+#define PRE_IGITION_BIAS_DEFAULT -20
 #elif NR_OF_MAGNETS == 10
-int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 288, 324, 0};
+int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 288, 324, 360};
 #define ENGINE_STOPPING_DELTA_TIME 50000
 #define PRE_IGITION_BIAS_DEFAULT 4
 #else
@@ -328,6 +327,9 @@ void magnet_handler()
 				}
 				angle_delta = estimated_crank_angle - (true_crank_angle[current_magnet] * 10);
 				estimated_crank_angle = true_crank_angle[current_magnet] * 10;
+				/* Explicity setting the estimated crank angle may lead to an extra unintentional dwell/ignition 
+				sequence if the estimation have run ahead of the actual and we have a VERY late 
+				ignition point (>360). The line above will put the logic back in the dwell period.*/
 				angular_frequency = (3600.0 / NR_OF_MAGNETS) / (magnet_time_delta / 1000000.0);
 				delta_time_history[0] = magnet_time_delta;
 			}
