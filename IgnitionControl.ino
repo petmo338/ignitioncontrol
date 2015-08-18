@@ -40,9 +40,9 @@ int32_t true_crank_angle[NR_OF_MAGNETS] = {90, 180, 270, 360};
 #define ENGINE_STOPPING_DELTA_TIME 100000
 #define PRE_IGITION_BIAS_DEFAULT -20
 #elif NR_OF_MAGNETS == 10
-int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 288, 324, 360};
+int32_t true_crank_angle[NR_OF_MAGNETS] = {36, 72, 108, 144, 180, 216, 252, 289, 324, 360};
 #define ENGINE_STOPPING_DELTA_TIME 50000
-#define PRE_IGITION_BIAS_DEFAULT 4
+#define PRE_IGITION_BIAS_DEFAULT 15
 #else
 #error "NR_OF_MAGNETS not defined"
 #endif
@@ -93,7 +93,7 @@ void update_tft();
 
 void setup()
 {
-	pinMode(FLYWHEEL_MAGNET_SENSOR_PIN, INPUT);
+	pinMode(FLYWHEEL_MAGNET_SENSOR_PIN, INPUT_PULLUP);
 	pinMode(IGNITION_OUT_PIN, OUTPUT);
 	pinMode(NTC_PIN, INPUT);
 	digitalWrite(IGNITION_OUT_PIN, LOW);
@@ -327,9 +327,10 @@ void magnet_handler()
 				}
 				angle_delta = estimated_crank_angle - (true_crank_angle[current_magnet] * 10);
 				estimated_crank_angle = true_crank_angle[current_magnet] * 10;
-				/* Explicity setting the estimated crank angle may lead to an extra unintentional dwell/ignition 
-				sequence if the estimation have run ahead of the actual and we have a VERY late 
-				ignition point (>360). The line above will put the logic back in the dwell period.*/
+				/* Explicity setting the estimated crank angle in this way may lead to an extra
+				unintentional dwell/ignition sequence if the estimation have run ahead of the actual
+				and we have a VERY late ignition point (>360). 
+				The line above will put the logic back in the dwell period.*/
 				angular_frequency = (3600.0 / NR_OF_MAGNETS) / (magnet_time_delta / 1000000.0);
 				delta_time_history[0] = magnet_time_delta;
 			}
