@@ -4,10 +4,10 @@
 
 // #define EXTRA_TRACE
 
-#define Serial SerialUSB
+//#define Serial SerialUSB
 
 #define TFT_UPDATE_INTERVAL 250000
-#define FLYWHEEL_MAGNET_SENSOR_PIN 6
+#define FLYWHEEL_MAGNET_SENSOR_PIN 6 // Port PC23 on SAM3
 #define IGNITION_OUT_PIN 7
 #define NTC_PIN 0
 #define PRE_IGITION_SLOPE_DEFAULT 10.0 // Degrees @ 1600 rpm. These two combined gives 25 deg + BIAS @ 1600 rpm
@@ -73,6 +73,7 @@ volatile int32_t current_magnet = -1;
 volatile uint32_t rpm;
 volatile uint32_t angular_frequency; // In 0.1 degrees / second
 volatile int32_t delta_time_history[DELTA_TIME_HISTORY_LENGTH];
+volatile int32_t low_time_history[DELTA_TIME_HISTORY_LENGTH];
 volatile int32_t magnet_start_time = 0;
 volatile int32_t magnet_time_delta = 0;
 volatile int32_t revolution_time = 0;
@@ -114,6 +115,13 @@ void setup()
 	ADC->ADC_MR |= 0x80; // these lines set free running mode
 	ADC->ADC_CR = 2; // Start ADC
 	ADC->ADC_CHER = (1 << ADC7) | (1 << ADC15) ; // Enable ADC channel 7
+
+	// Set up debounching on FLYWHEEL_MAGNET_SENSOR_PIN
+	// Assuming Slow Clock of 32 kHz, so < 30us pulses will be filtered
+	//	PIOC->PIO_PER = PIO_PC24;  //Enable PIO
+	PIOC->PIO_IFER |= PIO_PC24;
+	PIOC->PIO_DIFSR |= PIO_PC24;
+	PIOC->PIO_SCDR = 0;
 }
 
 void loop()
@@ -169,9 +177,9 @@ void loop()
 		}
 
 		noInterrupts();
-		int send_size = sprintf(serial_send_buffer, "{\"ht\":%lu,\"ia\":%ld,\"ea\":%ld,\"ad\":%ld,\"cm\":%ld,"
+		int send_size = sprintf(serial_send_buffer, "{\"ht\":%lu,\"lt\":%lu,\"ia\":%ld,\"ea\":%ld,\"ad\":%ld,\"cm\":%ld,"
 				"\"rp\":%lu,\"st\":%d,\"af\":%lu,\"da\":%ld,\"nm\":%lu,\"tp\":%lu}\n",
-			delta_time_history[0], ignition_angle, estimated_crank_angle, angle_delta, current_magnet, rpm,
+			delta_time_history[0], low_time_history[0], ignition_angle, estimated_crank_angle, angle_delta, current_magnet, rpm,
 			current_state, angular_frequency, dwell_start_angle, nr_of_magnets_passed, temperature);
 		interrupts();
 		Serial.write((uint8_t*)serial_send_buffer, send_size);
@@ -228,8 +236,8 @@ void calculate_angles(float dwell_time)
 	}
 	rpm = (60 * RPM_SMOOTHING_LENGTH) / (revolution_time_sum / 1000000.0);
 	float angular_freq_dependent_pre_ignition = (float)pre_ignition_slope / PRE_IGITION_SLOPE_DIVISOR;
-	float ang_freq = 3600.0 / ((float)revolution_time_history[0] / 1000000.0);
-//	float ang_freq = rpm * 6;
+//	float ang_freq = 3600.0 / ((float)revolution_time_history[0] / 1000000.0);
+	float ang_freq = rpm * 60;
 	dwell_start_angle = 3600.0 - (pre_ignition_bias * 10) -
 		ang_freq * (dwell_time + angular_freq_dependent_pre_ignition);
 	ignition_angle = 3600.0 - (pre_ignition_bias * 10) -
@@ -318,12 +326,25 @@ void magnet_handler()
 			{
 				if (current_magnet == 0)
 				{
-					for (int i = RPM_SMOOTHING_LENGTH - 1; i > 0; i--)
+					if ((rpm > 300) && (now - revolution_time) * 1.1 > revolution_time_history[0]) // Allow 10% change in RPM
 					{
-						revolution_time_history[i] = revolution_time_history[i - 1];
+						for (int i = RPM_SMOOTHING_LENGTH - 1; i > 0; i--)
+						{
+							revolution_time_history[i] = revolution_time_history[i - 1];
+						}
+						revolution_time_history[0] = now - revolution_time;
+						revolution_time = now;
 					}
-					revolution_time_history[0] = now - revolution_time;
-					revolution_time = now;
+					else
+					{
+						for (int i = RPM_SMOOTHING_LENGTH - 1; i > 0; i--)
+						{
+							revolution_time_history[i] = revolution_time_history[i - 1];
+						}
+						revolution_time_history[0] = now - revolution_time;
+						revolution_time = now;
+					}
+
 				}
 				angle_delta = estimated_crank_angle - (true_crank_angle[current_magnet] * 10);
 				estimated_crank_angle = true_crank_angle[current_magnet] * 10;
@@ -341,12 +362,14 @@ void magnet_handler()
 	}
 	if (pin_state == HIGH)
 	{
-		if (current_magnet >= 0)
-		{
-			magnet_passed = true;
-		}
+		//if (current_magnet >= 0)
+		//{
+		//	magnet_passed = true;
+		//}
+		magnet_passed = true;
 		current_magnet++;
 		current_magnet %= NR_OF_MAGNETS;
+		low_time_history[0] = now - magnet_start_time;
 	}
 }
 
